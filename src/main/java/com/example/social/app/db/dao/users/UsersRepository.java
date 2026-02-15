@@ -1,6 +1,6 @@
-package app.db.dao.users;
+package com.example.social.app.db.dao.users;
 
-import app.db.entity.user.UsersEntity;
+import com.example.social.app.db.entity.user.UsersEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
