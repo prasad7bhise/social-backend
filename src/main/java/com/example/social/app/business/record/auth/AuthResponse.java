@@ -1,5 +1,5 @@
 package com.example.social.app.business.record.auth;
 
-public record AuthResponse(String token) {
+public record AuthResponse(String message) {
 
 }

@@ -4,7 +4,6 @@ import com.example.social.app.business.dto.auth.CreateUserDTO;
 import com.example.social.app.business.dto.auth.LogUserDTO;
 import com.example.social.app.business.record.auth.AuthResponse;
 import com.example.social.app.business.service.auth.AuthService;
-import com.example.social.app.config.security.JwtServiceConfig;
 import com.example.social.app.db.dao.users.UsersRepository;
 import com.example.social.app.db.entity.user.UsersEntity;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtServiceConfig jwtServiceConfig;
 
     @Override
     public AuthResponse registerUser(CreateUserDTO createUserDTO) {
@@ -27,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
 
         final UsersEntity user = new UsersEntity();
         user.setEmail(createUserDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
+//        user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
         user.setRole("User");
         user.setFirstName(createUserDTO.getFirstName());
         user.setLastName(createUserDTO.getLastName());
@@ -38,13 +36,12 @@ public class AuthServiceImpl implements AuthService {
 
     public AuthResponse login(LogUserDTO logUserDTO) {
 
-        final UsersEntity user = usersRepository.findByEmail(logUserDTO.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+//        final UsersEntity user = usersRepository.findByEmail(logUserDTO.getEmail())
+//                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        if (!passwordEncoder.matches(logUserDTO.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-        String token = jwtServiceConfig.generateToken(user.getEmail());
-        return new AuthResponse(token);
+//        if (!passwordEncoder.matches(logUserDTO.getPassword(), user.getPassword())) {
+//            throw new RuntimeException("Invalid credentials");
+//        }
+        return new AuthResponse("Login Successful");
     }
 }

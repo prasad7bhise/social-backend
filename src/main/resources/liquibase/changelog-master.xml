@@ -9,6 +9,7 @@
     <include file="liquibase/user/01_create_table.xml"/>
     <include file="liquibase/user/02_alter_table_add_column.xml"/>
     <include file="liquibase/user/03_alter_table_rename_column.xml"/>
-
+    <include file="liquibase/user/04_alter_table-add_column.xml"/>
+    <include file="liquibase/user/05_alter_table_drop_column.xml"/>
 
 </databaseChangeLog>
