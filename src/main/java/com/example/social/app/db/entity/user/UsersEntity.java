@@ -21,8 +21,8 @@ public class UsersEntity {
     private String email;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
     private String role;
+
+    @Column(name = "keycloak_id", unique = true, nullable = false)
+    private String keycloakId;
 }
