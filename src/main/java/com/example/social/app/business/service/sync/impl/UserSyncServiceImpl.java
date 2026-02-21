@@ -1,6 +1,7 @@
 package com.example.social.app.business.service.sync.impl;
 
 import com.example.social.app.business.dto.auth.UserInfoDTO;
+import com.example.social.app.business.mapper.UserMapper;
 import com.example.social.app.business.service.sync.UserSyncService;
 import com.example.social.app.db.dao.users.UsersRepository;
 import com.example.social.app.db.entity.user.UsersEntity;
@@ -15,6 +16,7 @@ import java.util.Objects;
 public class UserSyncServiceImpl implements UserSyncService {
 
     private final UsersRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UserInfoDTO syncUser(Jwt jwt) {
@@ -30,13 +32,7 @@ public class UserSyncServiceImpl implements UserSyncService {
                 .orElseGet(() ->
                         createNewUser(keycloakId, email, firstName, lastName));
 
-        UserInfoDTO userInfoDTO = new UserInfoDTO();
-        userInfoDTO.setEmail(user.getEmail());
-        userInfoDTO.setFirstName(user.getFirstName());
-        userInfoDTO.setLastName(user.getLastName());
-        userInfoDTO.setId(user.getId());
-        userInfoDTO.setRole(user.getRole());
-        return userInfoDTO;
+        return userMapper.mapEntityToDTO(user);
     }
 
     private UsersEntity createNewUser(String keycloakId,
@@ -44,14 +40,7 @@ public class UserSyncServiceImpl implements UserSyncService {
                                       String firstName,
                                       String lastName) {
 
-        UsersEntity user = new UsersEntity();
-        user.setKeycloakId(keycloakId);
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setRole("USER"); // local app role
-
-        return userRepository.save(user);
+        return userRepository.save(userMapper.mapDTOToEntity(keycloakId, email, firstName, lastName, "USER"));
     }
 
     private UsersEntity updateIfChanged(UsersEntity user,
