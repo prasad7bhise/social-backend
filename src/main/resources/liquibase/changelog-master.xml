@@ -11,5 +11,17 @@
     <include file="liquibase/user/03_alter_table_rename_column.xml"/>
     <include file="liquibase/user/04_alter_table-add_column.xml"/>
     <include file="liquibase/user/05_alter_table_drop_column.xml"/>
+    <include file="liquibase/user/06_alter_table_add_profile_fields.xml"/>
+    <include file="liquibase/post/01_create_table.xml"/>
+    <include file="liquibase/post_media/01_create_table.xml"/>
+    <include file="liquibase/comment/01_create_table.xml"/>
+    <include file="liquibase/post_likes/01_create_table.xml"/>
+    <include file="liquibase/follow/01_create_table.xml"/>
+    <include file="liquibase/conversation/01_create_table.xml"/>
+    <include file="liquibase/conversation_participant/01_create_table.xml"/>
+    <include file="liquibase/message/01_create_table.xml"/>
+    <include file="liquibase/message_request/01_create_table.xml"/>
+    <include file="liquibase/notification/01_create_table.xml"/>
+    <include file="liquibase/message_reaction/01_create_table.xml"/>
 
 </databaseChangeLog>

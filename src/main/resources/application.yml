@@ -1,4 +1,10 @@
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+
   datasource:
     url: jdbc:mysql://localhost:3306/social?allowPublicKeyRetrieval=true&useSSL=false
     username: social
@@ -7,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -20,5 +26,16 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8081/realms/social-realm
+app:
+  upload:
+    dir: uploads
+
+  keycloak:
+    admin:
+      server-url: http://localhost:8081
+      realm: social-realm
+      client-id: social-backend-admin
+      client-secret: "z1rsgl4XOSflnpKbtCqDcdaB3PuUgTfx"
+
 server:
   port: 8080

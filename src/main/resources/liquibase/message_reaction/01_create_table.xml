@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+    <changeSet id="1" author="prasad">
+        <createTable tableName="message_reactions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="message_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="emoji" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="message_reactions"
+                baseColumnNames="message_id"
+                referencedTableName="messages"
+                referencedColumnNames="id"
+                constraintName="fk_reaction_message"/>
+
+        <addForeignKeyConstraint
+                baseTableName="message_reactions"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_reaction_user"/>
+
+        <addUniqueConstraint
+                tableName="message_reactions"
+                columnNames="message_id, user_id, emoji"
+                constraintName="uq_reaction"/>
+
+        <createIndex tableName="message_reactions" indexName="idx_reaction_message">
+            <column name="message_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

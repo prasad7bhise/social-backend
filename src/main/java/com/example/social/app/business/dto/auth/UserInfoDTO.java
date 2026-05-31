@@ -13,4 +13,7 @@ public class UserInfoDTO {
     private String lastName;
     private String email;
     private String role;
+    private String bio;
+    private String avatarUrl;
+    private long postCount;
 }

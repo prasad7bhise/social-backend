@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+    <changeSet id="1" author="prasad">
+
+        <createTable tableName="conversation_participants">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="conversation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="joined_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                tableName="conversation_participants"
+                columnNames="conversation_id, user_id"
+                constraintName="uk_cp_unique"/>
+
+        <addForeignKeyConstraint
+                baseTableName="conversation_participants"
+                baseColumnNames="conversation_id"
+                referencedTableName="conversations"
+                referencedColumnNames="id"
+                constraintName="fk_cp_conversation"/>
+
+        <addForeignKeyConstraint
+                baseTableName="conversation_participants"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_cp_user"/>
+
+        <createIndex tableName="conversation_participants" indexName="idx_cp_conversation">
+            <column name="conversation_id"/>
+        </createIndex>
+
+        <createIndex tableName="conversation_participants" indexName="idx_cp_user">
+            <column name="user_id"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>
