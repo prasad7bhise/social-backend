@@ -29,4 +29,9 @@ public class UsersEntity {
 
     @Column(name = "keycloak_id", unique = true, nullable = false)
     private String keycloakId;
+
+    private String bio;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 }

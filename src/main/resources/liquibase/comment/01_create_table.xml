@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+    <changeSet id="1" author="prasad">
+
+        <createTable tableName="comments">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="content" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ref_post" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ref_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="comments"
+                baseColumnNames="ref_post"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                constraintName="fk_comments_ref_post"/>
+
+        <addForeignKeyConstraint
+                baseTableName="comments"
+                baseColumnNames="ref_user"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_comments_ref_user"/>
+
+        <createIndex tableName="comments" indexName="idx_comments_ref_post">
+            <column name="ref_post"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>
