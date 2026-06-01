@@ -18,7 +18,7 @@ services:
     repo: https://github.com/prasad7bhise/social-backend
     branch: master
     dockerfilePath: ./keycloak/Dockerfile
-    plan: starter
+    plan: free
     healthCheckPath: /health/ready
     envVars:
       - key: KC_HOSTNAME
@@ -54,7 +54,7 @@ services:
     repo: https://github.com/prasad7bhise/social-backend
     branch: master
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: free
     healthCheckPath: /api/auth/test
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -90,7 +90,7 @@ services:
     repo: https://github.com/prasad7bhise/social-frontend
     branch: master
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: free
     healthCheckPath: /
     envVars:
       - key: NEXTAUTH_URL
