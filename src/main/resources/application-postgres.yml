@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/social}
+    username: ${DB_USERNAME:social}
+    password: ${DB_PASSWORD:socialPass123!}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8081/realms/social-realm}
+
+app:
+  keycloak:
+    admin:
+      server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8081}
+      realm: social-realm
+      client-id: social-backend-admin
+      client-secret: ${KEYCLOAK_ADMIN_SECRET:z1rsgl4XOSflnpKbtCqDcdaB3PuUgTfx}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

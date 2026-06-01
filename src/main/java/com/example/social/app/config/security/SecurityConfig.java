@@ -1,6 +1,7 @@
 package com.example.social.app.config.security;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,7 +17,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +25,9 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
+
+    @Value("${cors.allowed-origins:http://localhost:3000}")
+    private String allowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,13 +58,13 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
-                Collections.singletonList("http://localhost:3000"));
+                Arrays.asList(allowedOrigins.split(",")));
 
         configuration.setAllowedMethods(
                 Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         configuration.setAllowedHeaders(
-                Collections.singletonList("*"));
+                Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
