@@ -33,6 +33,8 @@ services:
         value: admin
       - key: KEYCLOAK_ADMIN_PASSWORD
         sync: false
+      - key: KC_HTTP_HOST
+        value: 0.0.0.0
       - key: KC_DB
         value: postgres
       - key: KC_DB_URL_HOST
