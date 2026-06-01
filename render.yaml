@@ -55,6 +55,8 @@ services:
         fromDatabase:
           name: keycloak-db
           property: password
+      - key: JAVA_OPTS_APPEND
+        value: "-Xms128m -Xmx384m"
 
   - type: web
     name: social-backend
