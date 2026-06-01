@@ -20,7 +20,7 @@ services:
     dockerfilePath: ./keycloak/Dockerfile
     plan: free
     autoDeploy: false
-    healthCheckPath: /realms/master
+    healthCheckPath: /health/ready
     envVars:
       - key: KC_HOSTNAME
         value: keycloak.onrender.com
