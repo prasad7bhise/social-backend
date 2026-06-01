@@ -1,0 +1,125 @@
+databases:
+  - name: social-db
+    databaseName: social
+    user: social_user
+    plan: free
+    postgresMajorVersion: 16
+
+  - name: keycloak-db
+    databaseName: keycloak
+    user: keycloak_user
+    plan: free
+    postgresMajorVersion: 16
+
+services:
+  - type: web
+    name: keycloak
+    env: docker
+    repo: https://github.com/prasad7bhise/social-backend
+    branch: master
+    dockerfilePath: ./keycloak/Dockerfile
+    plan: starter
+    healthCheckPath: /health/ready
+    envVars:
+      - key: KC_HOSTNAME
+        value: keycloak.onrender.com
+      - key: KC_HOSTNAME_PORT
+        value: 443
+      - key: KC_HOSTNAME_STRICT
+        value: "true"
+      - key: KC_HTTP_ENABLED
+        value: "true"
+      - key: KEYCLOAK_ADMIN
+        value: admin
+      - key: KEYCLOAK_ADMIN_PASSWORD
+        sync: false
+      - key: KC_DB
+        value: postgres
+      - key: KC_DB_URL
+        fromDatabase:
+          name: keycloak-db
+          property: connectionString
+      - key: KC_DB_USERNAME
+        fromDatabase:
+          name: keycloak-db
+          property: user
+      - key: KC_DB_PASSWORD
+        fromDatabase:
+          name: keycloak-db
+          property: password
+
+  - type: web
+    name: social-backend
+    env: docker
+    repo: https://github.com/prasad7bhise/social-backend
+    branch: master
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /api/auth/test
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: postgres
+      - key: DB_URL
+        fromDatabase:
+          name: social-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: social-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: social-db
+          property: password
+      - key: KEYCLOAK_ISSUER_URI
+        fromService:
+          type: web
+          name: keycloak
+          property: host
+        value: https://keycloak.onrender.com/realms/social-realm
+      - key: KEYCLOAK_SERVER_URL
+        fromService:
+          type: web
+          name: keycloak
+          property: host
+        value: https://keycloak.onrender.com
+      - key: KEYCLOAK_ADMIN_SECRET
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        fromService:
+          type: web
+          name: social-frontend
+          property: host
+        value: https://social-frontend.onrender.com
+    disk:
+      name: uploads
+      mountPath: /app/uploads
+      sizeGB: 1
+
+  - type: web
+    name: social-frontend
+    env: docker
+    repo: https://github.com/prasad7bhise/social-frontend
+    branch: master
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /
+    envVars:
+      - key: NEXTAUTH_URL
+        value: https://social-frontend.onrender.com
+      - key: NEXTAUTH_SECRET
+        sync: false
+      - key: KEYCLOAK_CLIENT_ID
+        value: social-frontend
+      - key: KEYCLOAK_ISSUER
+        fromService:
+          type: web
+          name: keycloak
+          property: host
+        value: https://keycloak.onrender.com/realms/social-realm
+      - key: NEXT_PUBLIC_API_BASE_URL
+        fromService:
+          type: web
+          name: social-backend
+          property: host
+        value: https://social-backend.onrender.com
