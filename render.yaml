@@ -54,7 +54,7 @@ services:
     repo: https://github.com/prasad7bhise/social-backend
     branch: master
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: free
     healthCheckPath: /api/auth/test
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -79,10 +79,6 @@ services:
         sync: false
       - key: CORS_ALLOWED_ORIGINS
         value: https://social-frontend.onrender.com
-    disk:
-      name: uploads
-      mountPath: /app/uploads
-      sizeGB: 1
 
   - type: web
     name: social-frontend
