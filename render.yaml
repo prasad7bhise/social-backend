@@ -72,24 +72,12 @@ services:
           name: social-db
           property: password
       - key: KEYCLOAK_ISSUER_URI
-        fromService:
-          type: web
-          name: keycloak
-          property: host
         value: https://keycloak.onrender.com/realms/social-realm
       - key: KEYCLOAK_SERVER_URL
-        fromService:
-          type: web
-          name: keycloak
-          property: host
         value: https://keycloak.onrender.com
       - key: KEYCLOAK_ADMIN_SECRET
         sync: false
       - key: CORS_ALLOWED_ORIGINS
-        fromService:
-          type: web
-          name: social-frontend
-          property: host
         value: https://social-frontend.onrender.com
     disk:
       name: uploads
@@ -112,14 +100,6 @@ services:
       - key: KEYCLOAK_CLIENT_ID
         value: social-frontend
       - key: KEYCLOAK_ISSUER
-        fromService:
-          type: web
-          name: keycloak
-          property: host
         value: https://keycloak.onrender.com/realms/social-realm
       - key: NEXT_PUBLIC_API_BASE_URL
-        fromService:
-          type: web
-          name: social-backend
-          property: host
         value: https://social-backend.onrender.com
