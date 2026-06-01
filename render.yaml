@@ -101,7 +101,7 @@ services:
     env: docker
     repo: https://github.com/prasad7bhise/social-frontend
     branch: master
-    dockerfilePath: ./my-app/Dockerfile
+    dockerfilePath: ./Dockerfile
     plan: starter
     healthCheckPath: /
     envVars:
