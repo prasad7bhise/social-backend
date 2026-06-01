@@ -59,10 +59,18 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: postgres
-      - key: DB_URL
+      - key: DB_HOST
         fromDatabase:
           name: social-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: social-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: social-db
+          property: database
       - key: DB_USERNAME
         fromDatabase:
           name: social-db
