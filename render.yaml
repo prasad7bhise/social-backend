@@ -19,6 +19,7 @@ services:
     branch: master
     dockerfilePath: ./keycloak/Dockerfile
     plan: free
+    autoDeploy: false
     healthCheckPath: /health/ready
     envVars:
       - key: KC_HOSTNAME
