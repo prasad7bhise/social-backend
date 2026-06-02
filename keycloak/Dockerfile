@@ -17,4 +17,4 @@ ENV KC_DB=postgres
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --chmod=0755 keycloak/start.sh /opt/keycloak/bin/start.sh
 
-ENTRYPOINT ["/opt/keycloak/bin/start.sh", "start", "--optimized", "--import-realm"]
+ENTRYPOINT ["/opt/keycloak/bin/start.sh", "start-dev", "--optimized", "--import-realm"]
