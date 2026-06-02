@@ -118,4 +118,4 @@ services:
       - key: KEYCLOAK_ISSUER
         value: https://keycloak-foj7.onrender.com/realms/social-realm
       - key: NEXT_PUBLIC_API_BASE_URL
-        value: https://social-backend.onrender.com
+        value: https://social-backend-rba1.onrender.com
