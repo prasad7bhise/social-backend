@@ -20,9 +20,8 @@ services:
     dockerfilePath: ./keycloak/Dockerfile
     plan: free
     autoDeploy: false
+    healthCheckPath: /health/ready
     envVars:
-      - key: PORT
-        value: 8080
       - key: KC_HOSTNAME
         value: keycloak-foj7.onrender.com
       - key: KC_HOSTNAME_STRICT
