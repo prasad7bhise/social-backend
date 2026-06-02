@@ -22,6 +22,10 @@ services:
     autoDeploy: false
     healthCheckPath: /health/ready
     envVars:
+      - key: PORT
+        value: 8080
+      - key: KC_PROXY_HEADERS
+        value: xforwarded
       - key: KC_HOSTNAME
         value: keycloak-foj7.onrender.com
       - key: KC_HOSTNAME_STRICT
