@@ -24,12 +24,10 @@ services:
     envVars:
       - key: PORT
         value: 8080
-      - key: KC_PROXY_HEADERS
-        value: xforwarded
       - key: KC_HOSTNAME
         value: keycloak-foj7.onrender.com
       - key: KC_HOSTNAME_STRICT
-        value: "true"
+        value: "false"
       - key: KC_HTTP_ENABLED
         value: "true"
       - key: KEYCLOAK_ADMIN
