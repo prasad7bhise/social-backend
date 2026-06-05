@@ -40,4 +40,14 @@ public class AuthServiceImplDataset {
         u.setRole("User");
         return u;
     }
+
+    public static UsersEntity createdUser() {
+        UsersEntity u = new UsersEntity();
+        u.setEmail("newuser@example.com");
+        u.setFirstName("New");
+        u.setLastName("User");
+        u.setRole("USER");
+        u.setKeycloakId("keycloak-uuid");
+        return u;
+    }
 }
