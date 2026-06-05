@@ -1,5 +1,6 @@
 package com.example.social.app.business.service.keycloak.impl;
 
+import com.example.social.app.business.dto.auth.CreateUserDTO;
 import com.example.social.app.business.dto.auth.ProfileUpdateRequest;
 import com.example.social.app.business.service.keycloak.KeycloakAdminService;
 import com.example.social.app.config.keycloak.KeycloakAdminProperties;
@@ -11,6 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -19,6 +21,37 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService {
 
     private final KeycloakAdminProperties properties;
     private final RestClient restClient;
+
+    @Override
+    public String createUser(CreateUserDTO dto) {
+        String token = getAdminToken();
+        String url = "%s/admin/realms/%s/users".formatted(
+                properties.getServerUrl(), properties.getRealm());
+
+        Map<String, Object> body = new java.util.LinkedHashMap<>();
+        body.put("username", dto.getEmail());
+        body.put("email", dto.getEmail());
+        body.put("firstName", dto.getFirstName());
+        body.put("lastName", dto.getLastName());
+        body.put("enabled", true);
+        body.put("emailVerified", true);
+        body.put("credentials", List.of(Map.of(
+                "type", "password",
+                "value", dto.getPassword(),
+                "temporary", false
+        )));
+
+        var responseEntity = restClient.post()
+                .uri(url)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+
+        String location = responseEntity.getHeaders().getLocation().toString();
+        return location.substring(location.lastIndexOf('/') + 1);
+    }
 
     @Override
     public void updateUser(String keycloakId, ProfileUpdateRequest request) {

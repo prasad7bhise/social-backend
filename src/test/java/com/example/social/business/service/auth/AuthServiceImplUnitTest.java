@@ -2,8 +2,10 @@ package com.example.social.business.service.auth;
 
 import com.example.social.app.business.dto.auth.CreateUserDTO;
 import com.example.social.app.business.dto.auth.LogUserDTO;
+import com.example.social.app.business.mapper.UserMapper;
 import com.example.social.app.business.record.auth.AuthResponse;
 import com.example.social.app.business.service.auth.impl.AuthServiceImpl;
+import com.example.social.app.business.service.keycloak.KeycloakAdminService;
 import com.example.social.app.db.dao.users.UsersRepository;
 import com.example.social.app.db.entity.user.UsersEntity;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -29,7 +30,10 @@ class AuthServiceImplUnitTest {
     private UsersRepository usersRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private KeycloakAdminService keycloakAdminService;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private AuthServiceImpl authService;
@@ -38,17 +42,16 @@ class AuthServiceImplUnitTest {
     void test01_registerUser_shouldRegisterNewUser() {
         CreateUserDTO dto = validCreateUserDTO();
         when(usersRepository.findByEmail("newuser@example.com")).thenReturn(Optional.empty());
+        when(keycloakAdminService.createUser(dto)).thenReturn("keycloak-uuid");
+        when(userMapper.mapDTOToEntity("keycloak-uuid", "newuser@example.com", "New", "User", "USER"))
+                .thenReturn(createdUser());
 
         AuthResponse response = authService.registerUser(dto);
 
         assertThat(response.message()).isEqualTo("User registered successfully");
-        ArgumentCaptor<UsersEntity> captor = ArgumentCaptor.forClass(UsersEntity.class);
-        verify(usersRepository).save(captor.capture());
-        UsersEntity saved = captor.getValue();
-        assertThat(saved.getEmail()).isEqualTo("newuser@example.com");
-        assertThat(saved.getFirstName()).isEqualTo("New");
-        assertThat(saved.getLastName()).isEqualTo("User");
-        assertThat(saved.getRole()).isEqualTo("User");
+        verify(keycloakAdminService).createUser(dto);
+        verify(userMapper).mapDTOToEntity("keycloak-uuid", "newuser@example.com", "New", "User", "USER");
+        verify(usersRepository).save(createdUser());
     }
 
     @Test
@@ -60,6 +63,7 @@ class AuthServiceImplUnitTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("User already exists");
         verify(usersRepository, never()).save(any());
+        verifyNoInteractions(keycloakAdminService);
     }
 
     @Test
