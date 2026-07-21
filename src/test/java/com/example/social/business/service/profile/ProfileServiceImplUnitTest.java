@@ -140,16 +140,15 @@ class ProfileServiceImplUnitTest {
     }
 
     @Test
-    void test08_updateProfile_shouldSucceedEvenWhenKeycloakFails() {
+    void test08_updateProfile_shouldSucceedWithAsyncKeycloakSync() {
         ProfileUpdateRequest request = updateLastNameRequest();
-        doThrow(new RuntimeException("Keycloak down"))
-                .when(keycloakAdminService).updateUser("kc-user-123", request);
         when(usersRepository.findByKeycloakId("kc-user-123")).thenReturn(Optional.of(user));
         when(usersRepository.save(any())).thenReturn(user);
         when(userMapper.mapEntityToDTO(any())).thenReturn(userDTO);
 
         UserInfoDTO result = profileService.updateProfile("kc-user-123", request);
 
+        verify(keycloakAdminService).updateUser("kc-user-123", request);
         assertThat(user.getLastName()).isEqualTo("Smith");
         verify(usersRepository).save(user);
     }

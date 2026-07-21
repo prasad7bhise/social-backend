@@ -39,6 +39,12 @@ app:
 
 server:
   port: 8080
+  tomcat:
+    threads:
+      max: 50
+      min-spare: 5
+    max-connections: 100
+    accept-count: 10
 
 cors:
   allowed-origins: http://localhost:3000
