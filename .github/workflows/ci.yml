@@ -6,7 +6,6 @@ on:
 
 jobs:
   test:
-    if: startsWith(github.head_ref, 'feature/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,4 +18,8 @@ jobs:
           cache: maven
 
       - name: Build and run unit tests
-        run: mvn clean install -B
+        run: mvn clean verify -B
+
+      - name: Fail if tests failed
+        if: failure()
+        run: echo "::error::Tests failed — cannot merge until all tests pass"
