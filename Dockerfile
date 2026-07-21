@@ -14,4 +14,4 @@ COPY --from=builder /app/target/*.jar app.jar
 RUN mkdir -p uploads && chown -R appuser:appgroup /app
 USER appuser
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Xms256m", "-Xmx512m", "-jar", "app.jar"]

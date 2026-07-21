@@ -5,8 +5,10 @@ import com.example.social.app.business.dto.auth.ProfileUpdateRequest;
 import com.example.social.app.business.service.keycloak.KeycloakAdminService;
 import com.example.social.app.config.keycloak.KeycloakAdminProperties;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class KeycloakAdminServiceImpl implements KeycloakAdminService {
 
     private final KeycloakAdminProperties properties;
@@ -54,25 +57,30 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService {
     }
 
     @Override
+    @Async("asyncTaskExecutor")
     public void updateUser(String keycloakId, ProfileUpdateRequest request) {
-        String token = getAdminToken();
-        String url = "%s/admin/realms/%s/users/%s".formatted(
-                properties.getServerUrl(), properties.getRealm(), keycloakId);
+        try {
+            String token = getAdminToken();
+            String url = "%s/admin/realms/%s/users/%s".formatted(
+                    properties.getServerUrl(), properties.getRealm(), keycloakId);
 
-        Map<String, Object> body = new java.util.LinkedHashMap<>();
-        if (request.getFirstName() != null) body.put("firstName", request.getFirstName());
-        if (request.getLastName() != null) body.put("lastName", request.getLastName());
-        if (request.getEmail() != null) body.put("email", request.getEmail());
+            Map<String, Object> body = new java.util.LinkedHashMap<>();
+            if (request.getFirstName() != null) body.put("firstName", request.getFirstName());
+            if (request.getLastName() != null) body.put("lastName", request.getLastName());
+            if (request.getEmail() != null) body.put("email", request.getEmail());
 
-        if (body.isEmpty()) return;
+            if (body.isEmpty()) return;
 
-        restClient.put()
-                .uri(url)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body)
-                .retrieve()
-                .toBodilessEntity();
+            restClient.put()
+                    .uri(url)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(body)
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (Exception e) {
+            log.error("Failed to update Keycloak user {}: {}", keycloakId, e.getMessage());
+        }
     }
 
     private String getAdminToken() {

@@ -51,12 +51,8 @@ public class ProfileServiceImpl implements ProfileService {
         UsersEntity user = usersRepository.findByKeycloakId(keycloakId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // Update Keycloak (best-effort — local DB update succeeds even if Keycloak is down)
-        try {
-            keycloakAdminService.updateUser(keycloakId, request);
-        } catch (Exception e) {
-            log.warn("Failed to sync profile to Keycloak: {}", e.getMessage());
-        }
+        // Update Keycloak asynchronously (best-effort — local DB update succeeds regardless)
+        keycloakAdminService.updateUser(keycloakId, request);
 
         // Update local DB
         if (request.getFirstName() != null) {
